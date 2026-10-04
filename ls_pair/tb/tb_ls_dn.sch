@@ -1,35 +1,30 @@
-v {xschem version=3.4.4 file_version=1.2}
+v {xschem version=3.4.8RC file_version=1.3}
 G {}
 K {}
 V {}
 S {}
+F {}
 E {}
-T {tb_ls_dn: ls_dn_3v3_1v2, 3.3 V -> 1.2 V (inverting).  PVT sweep: scripts/run_pvt.py tb_ls_dn} -300 -480 0 0 0.5 0.5 {}
-C {ls_dn_3v3_1v2.sym} 420 -300 0 0 {name=x1}
-C {gnd.sym} 420 -270 0 0 {name=g1 lab=GND}
-N 420 -330 420 -360 {}
-C {lab_pin.sym} 420 -360 0 0 {name=p2 sig_type=std_logic lab=vddl}
-N 460 -300 490 -300 {}
-C {lab_pin.sym} 490 -300 2 0 {name=p3 sig_type=std_logic lab=out}
-N 380 -300 350 -300 {}
-C {lab_pin.sym} 350 -300 0 0 {name=p4 sig_type=std_logic lab=in}
-C {vsource.sym} -200 -300 0 0 {name=VL value="dc \{VDDL\}" savecurrent=false}
-N -200 -330 -200 -350 {}
-C {lab_pin.sym} -200 -350 0 0 {name=p5 sig_type=std_logic lab=vddl}
-C {gnd.sym} -200 -270 0 0 {name=g6 lab=GND}
-C {vsource.sym} -100 -300 0 0 {name=VH value="dc \{VDDH\}" savecurrent=false}
-N -100 -330 -100 -350 {}
-C {lab_pin.sym} -100 -350 0 0 {name=p7 sig_type=std_logic lab=vddh}
-C {gnd.sym} -100 -270 0 0 {name=g8 lab=GND}
-C {vsource.sym} 0 -300 0 0 {name=VIN value="PULSE(0 \{VDDH\} 10n \{TR\} \{TR\} 20n 50n)" savecurrent=false}
-N 0 -330 0 -350 {}
-C {lab_pin.sym} 0 -350 0 0 {name=p9 sig_type=std_logic lab=in}
-C {gnd.sym} 0 -270 0 0 {name=g10 lab=GND}
-C {capa.sym} 740 -300 0 0 {name=CL m=1 value=\{CLOAD\}}
-N 740 -330 740 -350 {}
-C {lab_pin.sym} 740 -350 0 0 {name=p11 sig_type=std_logic lab=out}
-C {gnd.sym} 740 -270 0 0 {name=g12 lab=GND}
-C {code_shown.sym} -300 -120 0 0 {name=CODE only_toplevel=false format="tcleval( @value )" value=".lib $::env(PDK_ROOT)/$::env(PDK)/libs.tech/ngspice/models/cornerMOSlv.lib mos_tt
+T {tb_ls_dn: ls_dn_3v3_1v2, 3.3 V -> 1.2 V (inverting).  PVT sweep: scripts/run_pvt.py tb_ls_dn} 0 -450 0 0 0.5 0.5 {}
+N 520 -400 520 -370 {lab=vddl}
+N 560 -340 600 -340 {lab=out}
+N 60 -160 60 -140 {lab=GND}
+N 260 -180 260 -160 {lab=GND}
+N 160 -160 260 -160 {lab=GND}
+N 160 -180 160 -160 {lab=GND}
+N 60 -180 60 -160 {lab=GND}
+N 600 -180 600 -160 {lab=GND}
+N 520 -160 600 -160 {lab=GND}
+N 600 -340 600 -240 {lab=out}
+N 520 -310 520 -160 {lab=GND}
+N 60 -160 160 -160 {lab=GND}
+N 160 -400 160 -240 {lab=vddl}
+N 260 -340 260 -240 {lab=in}
+N 60 -260 60 -240 {lab=vddh}
+N 160 -400 520 -400 {lab=vddl}
+N 260 -340 480 -340 {lab=in}
+N 260 -160 520 -160 {lab=GND}
+C {code_shown.sym} 0 -70 0 0 {name=CODE only_toplevel=false format="tcleval( @value )" value=".lib $::env(PDK_ROOT)/$::env(PDK)/libs.tech/ngspice/models/cornerMOSlv.lib mos_tt
 .lib $::env(PDK_ROOT)/$::env(PDK)/libs.tech/ngspice/models/cornerMOShv.lib mos_tt
 .temp 27
 .param VDDL=1.2 VDDH=3.3 CLOAD=20f TR=500p
@@ -46,3 +41,16 @@ C {code_shown.sym} -300 -120 0 0 {name=CODE only_toplevel=false format="tcleval(
 pre_osdi $::env(PDK_ROOT)/$::env(PDK)/libs.tech/ngspice/osdi/psp103_nqs.osdi
 run
 .endc"}
+C {lab_pin.sym} 260 -340 0 0 {name=p5 sig_type=std_logic lab=in}
+C {ls_dn_3v3_1v2.sym} 520 -340 0 0 {name=x1}
+C {lab_pin.sym} 520 -400 0 1 {name=p7 sig_type=std_logic lab=vddl}
+C {lab_pin.sym} 600 -340 2 0 {name=p8 sig_type=std_logic lab=out}
+C {vsource.sym} 160 -210 0 0 {name=VL value="dc \{VDDL\}" savecurrent=false}
+C {lab_pin.sym} 160 -260 0 0 {name=p10 sig_type=std_logic lab=vddl}
+C {gnd.sym} 60 -140 0 0 {name=g11 lab=GND}
+C {vsource.sym} 60 -210 0 0 {name=VH value="dc \{VDDH\}" savecurrent=false}
+C {lab_pin.sym} 60 -260 0 0 {name=p12 sig_type=std_logic lab=vddh}
+C {vsource.sym} 260 -210 0 0 {name=VIN value="PULSE(0 \{VDDH\} 10n \{TR\} \{TR\} 20n 50n)" savecurrent=false}
+C {lab_pin.sym} 260 -260 0 0 {name=p14 sig_type=std_logic lab=in}
+C {capa.sym} 600 -210 0 0 {name=CL m=1 value=\{CLOAD\}}
+C {lab_pin.sym} 600 -260 0 0 {name=p18 sig_type=std_logic lab=out}
