@@ -1,7 +1,7 @@
 # ls_pair: 1.2 V <-> 3.3 V level shifter pair for IHP SG13CMOS5L
 
 Two small cells with xschem symbols, three testbenches, and a PVT runner.
-Built 2026-10-03 from the survey in `../_claude_logs/level_shifter_survey/`.
+Built 2026-10-03 from the survey in `../level_shifter_survey/`.
 
 | Cell | Direction | Ports (order) | Devices | Source |
 |---|---|---|---|---|
