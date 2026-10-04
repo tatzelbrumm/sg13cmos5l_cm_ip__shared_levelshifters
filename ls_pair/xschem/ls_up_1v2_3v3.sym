@@ -1,4 +1,7 @@
-v {xschem version=3.4.4 file_version=1.2}
+v {xschem version=3.4.4 file_version=1.2
+* Graphics adapted from IHP-Open-PDK sg13cmos5l_stdcells buf_1 / inv_1 symbols
+* Copyright 2023 IHP PDK Authors, Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
+}
 G {}
 K {type=subcircuit
 format="@name @pinlist @symname"
@@ -8,20 +11,23 @@ description="1.2V to 3.3V level shifter (non-inverting), IHP SG13CMOS5L"
 V {}
 S {}
 E {}
-P 4 5 -130 -50 130 -50 130 50 -130 50 -130 -50 {}
-L 7 0 50 0 70 {}
-B 5 -2.5 67.5 2.5 72.5 {name=vss dir=inout}
-T {vss} -15 25 0 0 0.2 0.2 {}
-L 7 -60 -70 -60 -50 {}
-B 5 -62.5 -72.5 -57.5 -67.5 {name=vddl dir=inout}
-T {vddl} -80 -45 0 0 0.2 0.2 {}
-L 7 60 -70 60 -50 {}
-B 5 57.5 -72.5 62.5 -67.5 {name=vddh dir=inout}
-T {vddh} 40 -45 0 0 0.2 0.2 {}
-L 7 130 0 150 0 {}
-B 5 147.5 -2.5 152.5 2.5 {name=out dir=out}
-T {out} 95 -8 0 0 0.2 0.2 {}
-L 7 -150 0 -130 0 {}
-B 5 -152.5 -2.5 -147.5 2.5 {name=in dir=in}
-T {in} -125 -8 0 0 0.2 0.2 {}
-T {1.2V -> 3.3V} -120 -10 0 0 0.3 0.3 {}
+L 4 -20 -20 -20 20 {}
+L 4 -20 -20 20 0 {}
+L 4 -20 20 20 0 {}
+L 4 -40 0 -20 0 {}
+L 4 20 0 40 0 {}
+L 4 0 10 0 30 {}
+L 4 -10 -30 -10 -15 {}
+L 4 10 -30 10 -5 {}
+B 5 -2.5 27.5 2.5 32.5 {name=vss dir=inout}
+B 5 -12.5 -32.5 -7.5 -27.5 {name=vddl dir=inout}
+B 5 7.5 -32.5 12.5 -27.5 {name=vddh dir=inout}
+B 5 37.5 -2.5 42.5 2.5 {name=out dir=out}
+B 5 -42.5 -2.5 -37.5 2.5 {name=in dir=in}
+T {in} -35 -14 0 0 0.2 0.2 {}
+T {@name} -40 24 0 0 0.2 0.2 {}
+T {@symname} 46 8 0 0 0.2 0.2 {}
+T {vss} 6 14 0 0 0.15 0.15 {}
+T {out} 36.25 -14 0 1 0.2 0.2 {}
+T {vddl} -14 -36 0 1 0.15 0.15 {}
+T {vddh} 14 -36 0 0 0.15 0.15 {}

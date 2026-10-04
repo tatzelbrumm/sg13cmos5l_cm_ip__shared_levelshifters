@@ -24,13 +24,23 @@ Minimum VDDL for `ls_up` (from the survey sweep, 27 C): 1.0 V at tt / 3.3 V, 1.0
 expect duty-cycle distortion on clock-like signals. Its HV gates see the full input swing (3.0 - 3.6 V):
 check that against IHP's gate-oxide rating for your supply tolerance.
 
+## Symbols
+Neither the IHP standard-cell library (no level-shifter cell among its sg13g2 / sg13cmos5l cells) nor the IHP IO
+library (pads only) has a level shifter, and the symbols in the other chipalooza2 designs are plain boxes. The two
+symbols are therefore adapted from the IHP `sg13cmos5l_buf_1` / `inv_1` symbols (Apache-2.0): a buffer triangle
+for `ls_up` (vddl, vddh on top, vss at the bottom), an inverter triangle with bubble for `ls_dn`.
+Unlike the IHP cells they carry real supply pins and are subcircuit symbols (`type=subcircuit`, netlisted as an
+`X` line to the `.sch` of the same name). Pin names and order are unchanged: `ls_up` has the pins of the SAR_ADC_IHP
+`level_shifter_1v2_to_3v3`, so the two are interchangeable by pin name.
+
 ## Files
 ```
 xschemrc            sources $PDK_ROOT/$PDK xschemrc (default PDK=ihp-sg13cmos5l), adds xschem/ and tb/
 xschem/             ls_up_1v2_3v3.{sch,sym}  ls_dn_3v3_1v2.{sch,sym}
 tb/                 tb_ls_up.sch  tb_ls_dn.sch  tb_ls_loop.sch   (xschem testbenches, ngspice)
 netlist/            plain SPICE subcircuits netlisted by xschem
-scripts/            gen_cells.py gen_tb.py (regenerate the .sch/.sym), check_netlist.py, run_pvt.py
+scripts/            gen_sym.py (symbols), gen_tb.py (testbenches), check_netlist.py, run_pvt.py,
+                    gen_cells.py (original .sch generator; refuses to run: the .sch were hand-edited since)
 simulation/         PVT results of this run (tb_*_pvt.json / .log)
 ```
 

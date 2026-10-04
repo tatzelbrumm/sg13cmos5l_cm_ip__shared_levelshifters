@@ -4,6 +4,9 @@ Pin offsets are those of sg13cmos5l_pr/sg13_{lv,hv}_{nmos,pmos}.sym (read from t
   nmos: D (20,-30) G (-20,0) S (20,30) B (20,0)
   pmos: D (20,30)  G (-20,0) S (20,-30) B (20,0)   (source on top)
 flip=1 negates x of the pin offsets.  All coordinates are on the 10-unit grid."""
+import sys
+if "--force" not in sys.argv:
+    sys.exit("gen_cells.py would overwrite xschem/ls_*.sch, which have been hand-edited since (2026-10-04). Run with --force only to regenerate from scratch.  Symbols: gen_sym.py.")
 import os
 OFF={'nmos':{'D':(20,-30),'G':(-20,0),'S':(20,30),'B':(20,0)},
      'pmos':{'D':(20,30),'G':(-20,0),'S':(20,-30),'B':(20,0)}}
@@ -102,8 +105,6 @@ s.text(60,-420,'ls_up_1v2_3v3: 1.2 V -> 3.3 V level shifter, non-inverting',0.5)
 s.text(60,-390,'Netlist identical to SAR_ADC_IHP level_shifter_1v2_to_3v3 (Apache-2.0, Arjun Ananth et al.)',0.3)
 s.text(60,40,'in: 0..VDDL   out: 0..VDDH   vddl 1.08-1.32 V, vddh 3.0-3.6 V.  Needs VDDL >= 1.08 V (tt: 1.0 V).',0.3)
 s.dump(os.path.join(D,'ls_up_1v2_3v3.sch'))
-write_sym(os.path.join(D,'ls_up_1v2_3v3.sym'),'1.2V to 3.3V level shifter (non-inverting), IHP SG13CMOS5L',
-          [('vss','B'),('vddl','T'),('vddh','T'),('out','R'),('in','L')],'1.2V -> 3.3V')
 # ------------------------------------------------------------------ ls_dn
 d=Sch()
 d.mos('MP1','pmos','hv',300,-200,0,'1u','0.45u')
@@ -118,6 +119,4 @@ d.text(60,-420,'ls_dn_3v3_1v2: 3.3 V -> 1.2 V level shifter, INVERTING',0.5)
 d.text(60,-390,'HV inverter powered from VDDL (pattern of bidir-level-shifter bidir_channel MMP8/MMN9)',0.3)
 d.text(60,40,'in: 0..VDDH (3.0-3.6 V)   out: 0..VDDL.  Low switching threshold (~0.6 V): rise/fall delays differ by 1-2.5 ns.',0.3)
 d.dump(os.path.join(D,'ls_dn_3v3_1v2.sch'))
-write_sym(os.path.join(D,'ls_dn_3v3_1v2.sym'),'3.3V to 1.2V level shifter (inverting), IHP SG13CMOS5L',
-          [('vss','B'),('vddl','T'),('out','R'),('in','L')],'3.3V -> 1.2V (inv)',w=150,h=70)
 print('written')

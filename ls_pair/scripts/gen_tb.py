@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the xschem testbenches (tb/*.sch).  Pin offsets of the cell symbols: see gen_cells.py."""
+"""Generate the xschem testbenches (tb/*.sch).  Pin offsets of the cell symbols: see gen_sym.py."""
 import os
 D=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','tb')
 HDR=["v {xschem version=3.4.4 file_version=1.2}","G {}","K {}","V {}","S {}","E {}"]
@@ -34,7 +34,7 @@ def dut(t,sym,x,y,pins):
 # ---------------------------------------------------------------- tb_ls_up
 t=TB()
 t.text(-300,-480,'tb_ls_up: ls_up_1v2_3v3, 1.2 V -> 3.3 V.  PVT sweep: scripts/run_pvt.py tb_ls_up',0.5)
-dut(t,'ls_up_1v2_3v3.sym',420,-300,[(0,70,'GND',0,0,0),(-60,-70,'vddl',0,0,-20),(60,-70,'vddh',0,0,-20),(150,0,'out',2,30,0),(-150,0,'in',0,-20,0)])
+dut(t,'ls_up_1v2_3v3.sym',420,-300,[(0,30,'GND',0,0,0),(-10,-30,'vddl',0,0,-30),(10,-30,'vddh',2,0,-30),(40,0,'out',2,30,0),(-40,0,'in',0,-30,0)])
 t.vsrc(-200,-300,'VL','dc \\{VDDL\\}','vddl'); t.vsrc(-100,-300,'VH','dc \\{VDDH\\}','vddh')
 t.vsrc(0,-300,'VIN','PULSE(0 \\{VDDL\\} 10n \\{TR\\} \\{TR\\} 20n 50n)','in'); t.cap(740,-300,'CL','\\{CLOAD\\}','out')
 t.code(-300,-120,'CODE',MODELS+"""
@@ -53,7 +53,7 @@ t.dump(os.path.join(D,'tb_ls_up.sch'))
 # ---------------------------------------------------------------- tb_ls_dn
 t=TB()
 t.text(-300,-480,'tb_ls_dn: ls_dn_3v3_1v2, 3.3 V -> 1.2 V (inverting).  PVT sweep: scripts/run_pvt.py tb_ls_dn',0.5)
-dut(t,'ls_dn_3v3_1v2.sym',420,-300,[(0,70,'GND',0,0,0),(0,-70,'vddl',0,0,-20),(150,0,'out',2,30,0),(-150,0,'in',0,-20,0)])
+dut(t,'ls_dn_3v3_1v2.sym',420,-300,[(0,30,'GND',0,0,0),(0,-30,'vddl',0,0,-30),(40,0,'out',2,30,0),(-40,0,'in',0,-30,0)])
 t.vsrc(-200,-300,'VL','dc \\{VDDL\\}','vddl'); t.vsrc(-100,-300,'VH','dc \\{VDDH\\}','vddh')
 t.vsrc(0,-300,'VIN','PULSE(0 \\{VDDH\\} 10n \\{TR\\} \\{TR\\} 20n 50n)','in'); t.cap(740,-300,'CL','\\{CLOAD\\}','out')
 t.code(-300,-120,'CODE',MODELS+"""
@@ -73,11 +73,11 @@ t.dump(os.path.join(D,'tb_ls_dn.sch'))
 t=TB()
 t.text(-300,-480,'tb_ls_loop: 1.2 V -> ls_up -> 3.3 V node h -> ls_dn -> 1.2 V (net inversion)',0.5)
 t.o.append("C {ls_up_1v2_3v3.sym} 420 -300 0 0 {name=x1}")
-for (px,py,node,rot,dx,dy) in [(0,70,'GND',0,0,0),(-60,-70,'vddl',0,0,-20),(60,-70,'vddh',0,0,-20),(150,0,'h',2,30,0),(-150,0,'in',0,-20,0)]:
+for (px,py,node,rot,dx,dy) in [(0,30,'GND',0,0,0),(-10,-30,'vddl',0,0,-30),(10,-30,'vddh',2,0,-30),(40,0,'h',2,30,0),(-40,0,'in',0,-30,0)]:
     t.wire(420+px,-300+py,420+px+dx,-300+py+dy) if (dx or dy) else None
     t.lab(420+px+dx,-300+py+dy,node,rot) if node!='GND' else t.gnd(420+px,-300+py)
 t.o.append("C {ls_dn_3v3_1v2.sym} 900 -300 0 0 {name=x2}")
-for (px,py,node,rot,dx,dy) in [(0,70,'GND',0,0,0),(0,-70,'vddl',0,0,-20),(150,0,'out',2,30,0),(-150,0,'h',0,-20,0)]:
+for (px,py,node,rot,dx,dy) in [(0,30,'GND',0,0,0),(0,-30,'vddl',0,0,-30),(40,0,'out',2,30,0),(-40,0,'h',0,-30,0)]:
     t.wire(900+px,-300+py,900+px+dx,-300+py+dy) if (dx or dy) else None
     t.lab(900+px+dx,-300+py+dy,node,rot) if node!='GND' else t.gnd(900+px,-300+py)
 t.vsrc(-200,-300,'VL','dc \\{VDDL\\}','vddl'); t.vsrc(-100,-300,'VH','dc \\{VDDH\\}','vddh')

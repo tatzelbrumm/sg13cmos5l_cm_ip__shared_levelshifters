@@ -6,13 +6,13 @@ S {}
 E {}
 T {tb_ls_dn: ls_dn_3v3_1v2, 3.3 V -> 1.2 V (inverting).  PVT sweep: scripts/run_pvt.py tb_ls_dn} -300 -480 0 0 0.5 0.5 {}
 C {ls_dn_3v3_1v2.sym} 420 -300 0 0 {name=x1}
-C {gnd.sym} 420 -230 0 0 {name=g1 lab=GND}
-N 420 -370 420 -390 {}
-C {lab_pin.sym} 420 -390 0 0 {name=p2 sig_type=std_logic lab=vddl}
-N 570 -300 600 -300 {}
-C {lab_pin.sym} 600 -300 2 0 {name=p3 sig_type=std_logic lab=out}
-N 270 -300 250 -300 {}
-C {lab_pin.sym} 250 -300 0 0 {name=p4 sig_type=std_logic lab=in}
+C {gnd.sym} 420 -270 0 0 {name=g1 lab=GND}
+N 420 -330 420 -360 {}
+C {lab_pin.sym} 420 -360 0 0 {name=p2 sig_type=std_logic lab=vddl}
+N 460 -300 490 -300 {}
+C {lab_pin.sym} 490 -300 2 0 {name=p3 sig_type=std_logic lab=out}
+N 380 -300 350 -300 {}
+C {lab_pin.sym} 350 -300 0 0 {name=p4 sig_type=std_logic lab=in}
 C {vsource.sym} -200 -300 0 0 {name=VL value="dc \{VDDL\}" savecurrent=false}
 N -200 -330 -200 -350 {}
 C {lab_pin.sym} -200 -350 0 0 {name=p5 sig_type=std_logic lab=vddl}

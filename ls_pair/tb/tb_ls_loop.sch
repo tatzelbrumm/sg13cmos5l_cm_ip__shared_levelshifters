@@ -6,23 +6,23 @@ S {}
 E {}
 T {tb_ls_loop: 1.2 V -> ls_up -> 3.3 V node h -> ls_dn -> 1.2 V (net inversion)} -300 -480 0 0 0.5 0.5 {}
 C {ls_up_1v2_3v3.sym} 420 -300 0 0 {name=x1}
-C {gnd.sym} 420 -230 0 0 {name=g1 lab=GND}
-N 360 -370 360 -390 {}
-C {lab_pin.sym} 360 -390 0 0 {name=p2 sig_type=std_logic lab=vddl}
-N 480 -370 480 -390 {}
-C {lab_pin.sym} 480 -390 0 0 {name=p3 sig_type=std_logic lab=vddh}
-N 570 -300 600 -300 {}
-C {lab_pin.sym} 600 -300 2 0 {name=p4 sig_type=std_logic lab=h}
-N 270 -300 250 -300 {}
-C {lab_pin.sym} 250 -300 0 0 {name=p5 sig_type=std_logic lab=in}
+C {gnd.sym} 420 -270 0 0 {name=g1 lab=GND}
+N 410 -330 410 -360 {}
+C {lab_pin.sym} 410 -360 0 0 {name=p2 sig_type=std_logic lab=vddl}
+N 430 -330 430 -360 {}
+C {lab_pin.sym} 430 -360 2 0 {name=p3 sig_type=std_logic lab=vddh}
+N 460 -300 490 -300 {}
+C {lab_pin.sym} 490 -300 2 0 {name=p4 sig_type=std_logic lab=h}
+N 380 -300 350 -300 {}
+C {lab_pin.sym} 350 -300 0 0 {name=p5 sig_type=std_logic lab=in}
 C {ls_dn_3v3_1v2.sym} 900 -300 0 0 {name=x2}
-C {gnd.sym} 900 -230 0 0 {name=g6 lab=GND}
-N 900 -370 900 -390 {}
-C {lab_pin.sym} 900 -390 0 0 {name=p7 sig_type=std_logic lab=vddl}
-N 1050 -300 1080 -300 {}
-C {lab_pin.sym} 1080 -300 2 0 {name=p8 sig_type=std_logic lab=out}
-N 750 -300 730 -300 {}
-C {lab_pin.sym} 730 -300 0 0 {name=p9 sig_type=std_logic lab=h}
+C {gnd.sym} 900 -270 0 0 {name=g6 lab=GND}
+N 900 -330 900 -360 {}
+C {lab_pin.sym} 900 -360 0 0 {name=p7 sig_type=std_logic lab=vddl}
+N 940 -300 970 -300 {}
+C {lab_pin.sym} 970 -300 2 0 {name=p8 sig_type=std_logic lab=out}
+N 860 -300 830 -300 {}
+C {lab_pin.sym} 830 -300 0 0 {name=p9 sig_type=std_logic lab=h}
 C {vsource.sym} -200 -300 0 0 {name=VL value="dc \{VDDL\}" savecurrent=false}
 N -200 -330 -200 -350 {}
 C {lab_pin.sym} -200 -350 0 0 {name=p10 sig_type=std_logic lab=vddl}
