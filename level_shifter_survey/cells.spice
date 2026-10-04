@@ -1,0 +1,149 @@
+* ---- common LV helper
+.subckt INVLV a y vdd vss
+XMP y a vdd vdd sg13_lv_pmos w=1.0u l=0.13u ng=1
+XMN y a vss vss sg13_lv_nmos w=0.5u l=0.13u ng=1
+.ends
+.subckt HVINV a y vdd vss
+XMP y a vdd vdd sg13_hv_pmos w=1.5u l=0.45u ng=1
+XMN y a vss vss sg13_hv_nmos w=1.0u l=0.45u ng=1
+.ends
+
+* ---- 1. SAR_ADC_IHP level_shifter_1v2_to_3v3 (vss vddl vddh out in)
+.subckt sar_l2h vss vddl vddh out in
+XM1 inb in vss vss sg13_lv_nmos w=0.6u l=0.13u ng=1
+XM2 inb in vddl vddl sg13_lv_pmos w=1.2u l=0.13u ng=1
+XM3 a in vss vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM4 b inb vss vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM5 b a vddh vddh sg13_hv_pmos w=2u l=0.4u ng=1
+XM6 a b vddh vddh sg13_hv_pmos w=2u l=0.4u ng=1
+XM12 out a vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM16 out a vddh vddh sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+.ends
+
+* ---- 2. bidir-level-shifter level_shifter_up (in q_h qb_h vddl vddh vss)
+.subckt bidir_up in q_h qb_h vddl vddh vss
+XMP1 qb_h q_h vddh vddh sg13_hv_pmos w=0.5u l=1.6u ng=1
+XMP2 q_h qb_h vddh vddh sg13_hv_pmos w=0.5u l=1.6u ng=1
+XMC1 qb_h vddl net1 vss sg13_hv_nmos w=1.5u l=0.45u ng=1
+XMC2 q_h vddl net2 vss sg13_hv_nmos w=1.5u l=0.45u ng=1
+XMN1 net1 in vss vss sg13_lv_nmos w=1.0u l=0.13u ng=1
+XMN2 net2 net3 vss vss sg13_lv_nmos w=1.0u l=0.13u ng=1
+XI in net3 vddl vss INVLV
+.ends
+
+* ---- 3. harness level_shift (in_n in_p out vdd vss); wrapper adds LV inverters
+.subckt harn_ls in_n in_p out vdd vss
+XM1 net1 in_p vss vss sg13_hv_nmos w=4u l=0.5u ng=1 m=2
+XM2 net1 S1_N vdd vdd sg13_hv_pmos w=1u l=0.5u ng=1 m=2
+XM3 S1_N in_n vss vss sg13_hv_nmos w=4u l=0.5u ng=1 m=2
+XM4 S1_N net1 vdd vdd sg13_hv_pmos w=1u l=0.5u ng=1 m=2
+XM5 S2_N S1_N vdd vdd sg13_hv_pmos w=2u l=0.5u ng=1 m=2
+XM6 S2_N S1_N vss vss sg13_hv_nmos w=1u l=0.5u ng=1 m=2
+XM7 out S2_N vdd vdd sg13_hv_pmos w=2u l=0.5u ng=1 m=4
+XM8 out S2_N vss vss sg13_hv_nmos w=1u l=0.5u ng=1 m=4
+.ends
+.subckt harn_ls_w vss vddl vddh out in
+XA in inb vddl vss INVLV
+XB inb inbb vddl vss INVLV
+XL inb inbb out vddh vss harn_ls
+.ends
+
+* ---- 4. hsxo level_shifter_xd (reconstructed from .sch)
+.subckt hsxo_ls vss vddl vddh hi lo
+XM5 lob lo vddl vddl sg13_lv_pmos w=0.87u l=0.13u ng=1
+XM6 lob lo vss vss sg13_lv_nmos w=0.87u l=0.13u ng=1
+XM3 hib hi vddh vddh sg13_hv_pmos w=0.8u l=0.4u ng=1
+XM1 hi hib vddh vddh sg13_hv_pmos w=0.8u l=0.4u ng=1
+XM4 hib lo vss vss sg13_hv_nmos w=0.9u l=0.45u ng=1
+XM2 hi lob vss vss sg13_hv_nmos w=0.9u l=0.45u ng=1
+.ends
+
+* ---- 5. lpopamp lvlshifter (Schmitt + inv, HV only)
+.subckt n1_1 d g s b
+Xn d g s b sg13_hv_nmos w=4.5u l=0.5u ng=1
+.ends
+.subckt n2_1 d g s b
+xl d g s b n1_1
+xr d g s b n1_1
+.ends
+.subckt n4_1 d g s b
+xl d g s b n2_1
+xr d g s b n2_1
+.ends
+.subckt n8_1 d g s b
+xl d g s b n4_1
+xr d g s b n4_1
+.ends
+.subckt p1_1 d g s b
+Xp d g s b sg13_hv_pmos w=4.5u l=0.5u ng=1
+.ends
+.subckt p1_2 d g s b
+xd d g x b p1_1
+xs x g s b p1_1
+.ends
+.subckt p1_4 d g s b
+xd d g x b p1_2
+xs x g s b p1_2
+.ends
+.subckt p1_8 d g s b
+xd d g x b p1_4
+xs x g s b p1_4
+.ends
+.subckt lp_inv in out vdd vss
+xp out in vdd vdd p1_1
+xn out in vss vss n1_1
+.ends
+.subckt lp_st in out vdd vss
+x0a xp0 in  vdd vdd p1_8
+x0b out in  xp0 vdd p1_8
+x0c out in  xn0 vss n8_1
+x0d xn0 in  vss vss n8_1
+x1a xp1 in  vdd vdd p1_8
+x1b y1  in  xp1 vdd p1_8
+x1c y1  out xn0 vss n8_1
+x1d xn0 in  vss vss n8_1
+x2a xp0 in  vdd vdd p1_8
+x2b y2  out xp0 vdd p1_8
+x2c y2  out xn2 vss n8_1
+x2d xn2 in  vss vss n8_1
+.ends
+.subckt lpop_ls vss vddl vddh out in
+xst  in x   vddh vss lp_st
+xinv x  out vddh vss lp_inv
+.ends
+
+* ---- down shifters
+* 6. HV inverter on VDDL (the bidir-level-shifter MMP8/MMN9 trick)
+.subckt hvinv_dn vss vddl vddh out in
+XMP8 out in vddl vddl sg13_hv_pmos w=1.0u l=0.45u ng=1
+XMN9 out in vss vss sg13_hv_nmos w=0.8u l=0.45u ng=1
+.ends
+* 7. SAR level_shifter_3v3_to_1v2 (vss vddl vddh out inp inn en_hv)
+.subckt tg vss ng pg vdd a b
+XM12 b ng a vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM16 b pg a vdd sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+.ends
+.subckt sar_h2l vss vddl vddh out inp inn en_hv
+XM7 q vddl xp vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM9 xp gatep vss vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM8 qb vddl xn vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM11 xn gaten vss vss sg13_hv_nmos w=2u l=0.45u ng=1 m=4
+XM17 lvbuf hbuf2 vss vss sg13_lv_nmos w=0.6u l=0.13u ng=1
+XM18 lvbuf hbuf2 vddl vddl sg13_lv_pmos w=1.2u l=0.13u ng=1
+XM3 q qb vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM4 qb q vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM5 qb q vddl vddl sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+XM6 q qb vddl vddl sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+XM14 hbuf qb vddl vddl sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+XM15 hbuf qb vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM19 hbuf2 hbuf vddl vddl sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+XM20 hbuf2 hbuf vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM21 out lvbuf vss vss sg13_lv_nmos w=0.6u l=0.13u ng=1
+XM22 out lvbuf vddl vddl sg13_lv_pmos w=1.2u l=0.13u ng=1
+XM23 enb en_hv vddh vddh sg13_hv_pmos w=2u l=0.4u ng=1 m=2
+XM24 enb en_hv vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+x1 vss en_hv enb vddh inp gatep tg
+x2 vss en_hv enb vddh inn gaten tg
+XM25 gatep enb vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+XM26 gaten enb vss vss sg13_hv_nmos w=2u l=0.45u ng=1
+.ends
