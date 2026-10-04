@@ -1,0 +1,23 @@
+# Project xschemrc for the 1.2 V <-> 3.3 V level shifter pair (IHP SG13CMOS5L).
+# Resolves the PDK through $PDK_ROOT/$PDK (default PDK=ihp-sg13cmos5l), sources the PDK's own
+# xschemrc, then appends this project's directories.  Start xschem from this directory, or pass
+# --rcfile <this file>.
+if { ![info exists env(PDK)] || $env(PDK) eq "" } { set ::env(PDK) ihp-sg13cmos5l }
+if { ![info exists env(PDK_ROOT)] } {
+    foreach candidate [list /foss/pdks /usr/share/pdk /usr/local/share/pdk $env(HOME)/.ciel] {
+        if { [file isdirectory $candidate/$env(PDK)] } { set ::env(PDK_ROOT) $candidate; break }
+    }
+}
+if { [info exists env(PDK_ROOT)] && ![file isdirectory $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/sg13cmos5l_pr]
+     && [file isdirectory $env(PDK_ROOT)/ihp-sg13cmos5l] } {
+    # an inherited PDK=ihp-sg13g2 has no sg13cmos5l_pr/ symbols
+    set ::env(PDK) ihp-sg13cmos5l
+}
+if { [info exists env(PDK_ROOT)] } {
+    set pdk_rc $env(PDK_ROOT)/$env(PDK)/libs.tech/xschem/xschemrc
+    if { [file exists $pdk_rc] } { source $pdk_rc } else { puts stderr "xschemrc: $pdk_rc not found" }
+} else { puts stderr "xschemrc: PDK_ROOT is not set and no PDK was found" }
+set project_dir [file dirname [file normalize [info script]]]
+append XSCHEM_LIBRARY_PATH :$project_dir/xschem:$project_dir/tb
+set netlist_dir $project_dir/simulation
+file mkdir $netlist_dir

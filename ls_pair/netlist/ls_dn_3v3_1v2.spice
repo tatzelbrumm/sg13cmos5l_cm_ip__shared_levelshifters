@@ -1,0 +1,10 @@
+** sch_path: xschem/ls_dn_3v3_1v2.sch
+**.subckt ls_dn_3v3_1v2 vss vddl out in
+*.iopin vss
+*.iopin vddl
+*.opin out
+*.ipin in
+XMP1 out in vddl vddl sg13_hv_pmos w=1u l=0.45u ng=1 m=1 mm_ok=1
+XMN1 out in vss vss sg13_hv_nmos w=0.8u l=0.45u ng=1 m=1 mm_ok=1
+**.ends
+.end
