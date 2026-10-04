@@ -1,0 +1,106 @@
+--- SKILL.before.md	2026-10-04 17:09:43.354506786 +0200
++++ SKILL.after.md	2026-10-04 17:10:34.268759926 +0200
+@@ -36,9 +36,9 @@
+    values.
+ 4. **Plan the placement** using the style rules below: rows, columns, mirror pairs, rails. Write
+    it as a `name: (x, y, rot, flip)` table before writing any file.
+-5. **Write the `.sch`**, with real orthogonal wires for every net that has a short route, and a
+-   `lab_pin` only where a wire would cross more than half the sheet. Use the property names from
+-   the PDK's own `template` (`w`/`l`/`ng`/`m` for IHP, `W`/`L`/`nf`/`mult` for sky130).
++5. **Write the `.sch`**, with a real wire for every net (orthogonal, see Wiring for the one
++   exception), and a `lab_pin` only to name a node, never instead of a wire. Use the property
++   names from the PDK's own `template` (`w`/`l`/`ng`/`m` for IHP, `W`/`L`/`nf`/`mult` for sky130).
+ 6. **Write the `.sym`.** Its pin order must equal the `.subckt` port order.
+ 7. **Netlist with xschem and compare** (see Verification). Fix every mismatch before delivering.
+ 8. **Render and look.** Use `xschem -q -x --svg --plotfile f.svg f.sch`, convert it to PNG
+@@ -49,7 +49,7 @@
+ A first pass that puts a net label on every terminal (stub plus `lab_pin`) is acceptable as a
+ quick, connectivity-exact draft. Say that it is a draft. The finished style below uses wires.
+ 
+-## Style (from Christoph Maier's hand-drawn d2s_miller / d2s_loadcomp, 2026-10-01)
++## Style (from Christoph Maier's hand-drawn d2s_miller / d2s_loadcomp, 2026-10-01, and his level-shifter edits, 2026-10-04)
+ 
+ These rules are about circuit structure, not about any one process.
+ 
+@@ -61,6 +61,8 @@
+   on the **right edge**, at mid-height between the output devices.
+ - **Rails are wires, not labels.** The supply is one horizontal bus across the full width at the
+   top, ground one bus across the bottom. Every source and bulk that goes to a rail is wired to it.
++- **Several positive supplies** (for example a 1.2 V and a 3.3 V domain): each gets its own rail
++  and its own port, the highest supply on top. A supply port sits at the height of its rail.
+ 
+ **Rows (y), all devices upright (rot 0)**
+ - PMOS current sources and mirror tops sit in one row just under the supply.
+@@ -68,6 +70,10 @@
+ - NMOS cascodes are in a row above the NMOS sinks; the sinks sit just above ground.
+ - Row pitch is 160–240 units. Leave horizontal routing channels between rows for long nets, such
+   as the pair drains running to the folding nodes.
++- A second positive supply adds a rail and a PMOS row of its own under that rail, at a different
++  height; the NMOS row stays shared. This is why such cells are taller. Example (ls_up, IHP
++  1.2 V -> 3.3 V): vddh rail y=-520 with the 3.3 V PMOS row at -460, vddl rail y=-380 with the
++  1.2 V PMOS at -330, NMOS row at -180, vss rail at -120.
+ 
+ **Columns (x)**
+ - Each current branch forms **one vertical column**, rail to rail: for example, the mirror PMOS,
+@@ -75,6 +81,11 @@
+ - **Differential pairs and mirrors are mirror images.** The left device is unflipped and the right
+   one flipped (or the reverse), so that gates face outward for input pairs and inward for tails
+   and mirrors that share a gate trunk. Pair spacing is about 220 units.
++- **Align columns by pins, not by device origins.** The pins that connect the stacked devices of
++  one branch (drain to drain, drain to source) share one x, so the wire between them is straight.
++  A flipped device has its pin x offsets negated, so its origin ends up 40 units off its
++  partner's. Flip only where the circuit asks for it (a cross-coupled pair, a mirror pair), not by
++  default.
+ - Tail current sources sit directly above their input devices, about 40 units inside them.
+ - The output devices are in the rightmost column, PMOS at the top (on the supply) and NMOS at the
+   bottom (on ground), with the output as a vertical trunk between them.
+@@ -86,19 +97,44 @@
+   the one that puts the correct pin on the correct side (see Geometry).
+ 
+ **Wiring**
+-- Orthogonal only, every coordinate on the 10-unit grid, no diagonals.
++- Orthogonal, every coordinate on the 10-unit grid.
++- **The one exception is a cross-coupled pair** (latch, regenerative comparator, level shifter):
++  its two gate-to-opposite-drain wires are drawn as diagonals forming an X between the two
++  mirrored devices. Put the gate stubs on the inner sides and end each diagonal on a stub end
++  and on the opposite drain track. The diagonals cross in their middles with no dot there; a
++  crossing is not a connection, and a netlist round trip confirms it. Use diagonals nowhere else.
+ - Crossings without a dot are not connections; xschem draws the dots at T-junctions.
+-- Bulks are wired to their source or rail, never left to a label alone. Even inside a branch, the
+-  PMOS bulk goes to the supply and the NMOS bulk to ground, unless the source netlist ties it
+-  elsewhere.
++- Every net is a wire, including long ones across the sheet. A `lab_pin` names a node (an
++  internal net such as `a`, `b`, `inb`) and never replaces a wire.
++- **Bulk.** When the bulk is tied to its supply by default, which is the usual case, wire it to
++  the rail, not to its own source: a short jog sideways next to the source wire, landing on the
++  rail. NMOS and PMOS follow the same rule (PMOS bulk to the positive rail of its own row, NMOS
++  bulk to ground) with the same jog. Deviate when the source netlist ties the bulk elsewhere or
++  when the schematic is meant to show a different bulk connection (body bias, bulk-driven, source
++  tied against the body effect): then draw that connection deliberately so the difference is
++  visible. Never leave a bulk to a label alone.
+ 
+ **What to avoid** (each of these was seen)
+-- Net-label soup: one label per terminal, with names colliding ("vbpvbp", "vddvss").
++- Net-label soup: a `lab_pin` stub on every terminal or between columns instead of wires, with
++  names colliding ("vbpvbp", "vddvss").
+ - Bulk or gate stubs from neighbouring devices that touch. xschem joins touching wire ends and
+   labels, which merges nets **silently**.
+ - Leftover labels under a hand-drawn wire. They are harmless only while they agree with the wire;
+   once someone edits the wire, they keep the old connection alive.
+ 
++## Symbols for the cell itself
++
++- Look for a ready-made symbol first: the PDK's standard cells (for IHP,
++  `libs.tech/xschem/sg13cmos5l_stdcells/`), then the user's other designs. If nothing fits 1:1,
++  adapt the closest standard-cell symbol (triangle and bubble from `inv_1` / `buf_1` for an
++  inverter- or buffer-like cell) instead of drawing a box.
++- PDK standard-cell symbols (`type=primitive`) carry VDD/VSS as properties. A cell with several
++  or non-standard supplies needs real pins: `type=subcircuit`, `format="@name @pinlist @symname"`,
++  `template="name=x1"`, positive supplies on top, ground at the bottom, signals at (±40, 0), all
++  pins on the 10-unit grid.
++- Pin order = `.subckt` port order (the order of the `B 5` boxes). Keep the credit line of the
++  source symbol in the header (the IHP symbols are Apache-2.0).
++
+ ## Geometry (xschem 3.4; holds for every PDK)
+ 
+ - Instance placement is `C {sym} x y rot flip {props}`, and the pin position is
