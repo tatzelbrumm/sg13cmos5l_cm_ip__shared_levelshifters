@@ -1,0 +1,40 @@
+--- SKILL.v1.md	2026-10-04 18:21:57.325192613 +0200
++++ SKILL.v2.md	2026-10-04 18:21:57.339830806 +0200
+@@ -1,6 +1,6 @@
+ ---
+ name: "xschem-analog-schematic"
+-description: "Draw or tidy xschem .sch schematics from a SPICE netlist, for any PDK (IHP, sky130, gf180, ...), in readable analog style, verified by netlisting back and comparing device by device."
++description: "Draw or tidy xschem .sch schematics from a SPICE netlist, for any PDK (IHP, sky130, gf180, ...), in readable analog style, verified by netlisting back and comparing device by device. Also covers the testbench schematics around a cell."
+ ---
+ 
+ # xschem-analog-schematic
+@@ -135,6 +135,29 @@
+ - Pin order = `.subckt` port order (the order of the `B 5` boxes). Keep the credit line of the
+   source symbol in the header (the IHP symbols are Apache-2.0).
+ 
++## Testbenches around the cell
++
++Seen in Christoph Maier's hand-drawn level-shifter testbenches (2026-10-04). The wire rules above
++apply unchanged.
++
++- Left to right: sources, device under test (DUT), loads. The DUT sits close to the sources, a few
++  hundred units away.
++- Sources are vertical, + on top, minus down to the ground bus. From left to right: the highest
++  supply, the lower supplies, then the input signal.
++- Supply and input nets are wires run above the DUT in nested L-shaped paths: the leftmost source
++  (highest supply) gets the topmost wire, the next source the next one down, the input the lowest,
++  so they do not cross on the way to the DUT. At the DUT the lower supply goes to the left supply
++  pin of the symbol, so the nesting carries into the pins. Accept a crossing only where it is
++  unavoidable (a second DUT further right that needs the lower supply).
++- One ground bus along the bottom, with a single `gnd` symbol at its left end. Source minus pins,
++  DUT ground pins and load capacitors are wired to it; no `gnd` symbol per element.
++- A load hangs below the output wire: a wire from the DUT output down to the top of the capacitor,
++  the bottom of the capacitor on the ground bus. The node between two DUTs is a straight wire with
++  its load hanging from a junction.
++- Name each net with a `lab_pin` sitting on its wire, at the source and at the DUT end (`vddh`,
++  `vddl`, `in`, `out`), not on a stub.
++- Title at the top left, the analysis code block (`code_shown`) under the circuit at the left.
++
+ ## Geometry (xschem 3.4; holds for every PDK)
+ 
+ - Instance placement is `C {sym} x y rot flip {props}`, and the pin position is
