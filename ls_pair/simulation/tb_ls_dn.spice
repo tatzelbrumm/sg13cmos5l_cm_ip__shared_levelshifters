@@ -1,0 +1,42 @@
+** sch_path: /foss/designs/chipalooza2/levelshifters/ls_pair/tb/tb_ls_dn.sch
+**.subckt tb_ls_dn
+x1 GND vddl out in ls_dn_3v3_1v2
+VL vddl GND dc {VDDL}
+VH vddh GND dc {VDDH}
+VIN in GND PULSE(0 {VDDH} 10n {TR} {TR} 20n 50n)
+CL out GND {CLOAD}
+**** begin user architecture code
+ .lib /foss/pdks/ihp-sg13cmos5l/libs.tech/ngspice/models/cornerMOSlv.lib mos_tt
+.lib /foss/pdks/ihp-sg13cmos5l/libs.tech/ngspice/models/cornerMOShv.lib mos_tt
+.temp 27
+.param VDDL=1.2 VDDH=3.3 CLOAD=20f TR=500p
+.tran 20p 48n
+.meas tran t_rf trig v(in) val='VDDH/2' rise=1 targ v(out) val='VDDL/2' fall=1
+.meas tran t_fr trig v(in) val='VDDH/2' fall=1 targ v(out) val='VDDL/2' rise=1
+.meas tran voh avg v(out) from=6n to=9n
+.meas tran vol avg v(out) from=26n to=29n
+.meas tran ih_lo avg i(VH) from=6n to=9n
+.meas tran ih_hi avg i(VH) from=26n to=29n
+.meas tran il_lo avg i(VL) from=6n to=9n
+.meas tran il_hi avg i(VL) from=26n to=29n
+.control
+pre_osdi /foss/pdks/ihp-sg13cmos5l/libs.tech/ngspice/osdi/psp103_nqs.osdi
+run
+.endc
+**** end user architecture code
+**.ends
+
+* expanding   symbol:  ls_dn_3v3_1v2.sym # of pins=4
+** sym_path: /foss/designs/chipalooza2/levelshifters/ls_pair/xschem/ls_dn_3v3_1v2.sym
+** sch_path: /foss/designs/chipalooza2/levelshifters/ls_pair/xschem/ls_dn_3v3_1v2.sch
+.subckt ls_dn_3v3_1v2 vss vddl out in
+*.iopin vss
+*.iopin vddl
+*.opin out
+*.ipin in
+XMP1 out in vddl vddl sg13_hv_pmos w=1u l=0.45u ng=1 m=1 mm_ok=1
+XMN1 out in vss vss sg13_hv_nmos w=0.8u l=0.45u ng=1 m=1 mm_ok=1
+.ends
+
+.GLOBAL GND
+.end

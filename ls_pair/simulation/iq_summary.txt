@@ -1,0 +1,96 @@
+--- tb_ls_up: quiescent current vs simulator gmin (tt, nominal supplies), A delivered
+  T= 27 gmin=1e-12 | iq_h lo/hi  2.74e-12  1.91e-12 | iq_l lo/hi  3.29e-11  5.26e-11 | iq_in lo/hi -1.99e-11  1.66e-11
+  T= 27 gmin=1e-15 | iq_h lo/hi  2.74e-12  1.91e-12 | iq_l lo/hi  3.29e-11  5.26e-11 | iq_in lo/hi -1.99e-11  1.66e-11
+  T= 27 gmin=1e-18 | iq_h lo/hi  2.74e-12  1.91e-12 | iq_l lo/hi  3.29e-11  5.26e-11 | iq_in lo/hi -1.99e-11  1.66e-11
+  T=125 gmin=1e-12 | iq_h lo/hi  6.53e-10  5.02e-10 | iq_l lo/hi  8.75e-10  3.08e-09 | iq_in lo/hi -3.17e-11  2.73e-11
+  T=125 gmin=1e-15 | iq_h lo/hi  6.53e-10  5.02e-10 | iq_l lo/hi  8.75e-10  3.08e-09 | iq_in lo/hi -3.17e-11  2.73e-11
+  T=125 gmin=1e-18 | iq_h lo/hi  6.53e-10  5.02e-10 | iq_l lo/hi  8.75e-10  3.08e-09 | iq_in lo/hi -3.17e-11  2.73e-11
+
+--- tb_ls_up: quiescent current, PVT (A, delivered by the source; | = min .. max over the 45 points, worst case in brackets)
+  VDDH  input lo: tt/27/nom  2.74e-12 |  1.20e-14 [ss  -40C 1.32/3.0V] ..  2.67e-09 [ff  125C 1.08/3.6V]
+  VDDH  input hi: tt/27/nom  1.91e-12 | -4.39e-14 [fs  -40C 1.20/3.3V] ..  2.26e-09 [ff  125C 1.08/3.6V]
+  VDDL  input lo: tt/27/nom  3.29e-11 |  2.82e-12 [ss  -40C 1.08/3.6V] ..  4.15e-09 [ff  125C 1.32/3.0V]
+  VDDL  input hi: tt/27/nom  5.26e-11 |  2.60e-14 [ss  -40C 1.08/3.6V] ..  1.76e-08 [ff  125C 1.32/3.0V]
+  input input lo: tt/27/nom -1.99e-11 | -1.47e-10 [ff  125C 1.32/3.0V] .. -2.81e-12 [ss  -40C 1.08/3.6V]
+  input input hi: tt/27/nom  1.66e-11 |  1.38e-12 [ss  -40C 1.08/3.6V] ..  1.97e-10 [ff  125C 1.32/3.0V]
+
+--- tb_ls_up: input transition time TR (tt, 27 C, VDDL 1.2 V, VDDH 3.3 V, CL 20 fF); charge in fC, peak in uA
+   TR     | Qh_r   Qh_f  | Ql_r   Ql_f  | Qin_r  Qin_f | pk_h_r pk_h_f | pk_l_r pk_l_f | pk_in_r pk_in_f
+   2e-11 |    273    242 |  -0.66   29.6 |   29.3  -30.2 |    908    468 |   11.3    305 | 1.2e+03   24.6
+   5e-11 |    274    234 | -0.747   29.5 |   29.6  -30.2 |    916    467 |   6.82    259 |    519   8.81
+   1e-10 |    275    226 | -0.854   29.4 |   30.1  -30.1 |    910    463 |   5.56    226 |    301   2.54
+   3e-10 |    284    216 | -0.982   29.4 |   30.1  -30.1 |    915    463 |   5.38    141 |    116  0.587
+   1e-09 |    325    221 | -0.565   30.2 |   30.1  -30.2 |    916    461 |   2.48   71.1 |   55.3  0.467
+   3e-09 |    453    238 |   2.01   33.3 |   30.2  -30.2 |    907    463 |   5.69   41.2 |   55.5 0.0701
+   1e-08 |    852    291 |   14.3   46.4 |   30.2  -30.1 |    848    455 |   8.25   30.7 |     50 0.00552
+
+--- tb_ls_up: load capacitance (tt, 27 C, nominal, TR 100 ps); fC.  Last row: linear fit Q = Q0 + k*CL
+CL= 1e-15 | Qh_r     221 Qh_f     230 | Ql_r  -0.858 Ql_f    29.4
+CL= 2e-14 | Qh_r     275 Qh_f     226 | Ql_r  -0.854 Ql_f    29.4
+CL= 5e-14 | Qh_r     369 Qh_f     225 | Ql_r  -0.856 Ql_f    29.4
+CL= 1e-13 | Qh_r     529 Qh_f     225 | Ql_r  -0.857 Ql_f    29.4
+   fit Qh_r: Q0 = 215 fC, k = 3.13 V
+   fit Qh_f: Q0 = 228 fC, k = -0.0366 V
+   fit Ql_r: Q0 = -0.857 fC, k = 4.15e-06 V
+   fit Ql_f: Q0 = 29.4 fC, k = -2.19e-05 V
+
+--- tb_ls_up: charge / peak current over PVT, TR 100 ps, CL 20 fF (fC / uA); min .. max [worst corner]
+  Qh_r     tt/27/nom      275 |      165 [fs  -40C 1.32/3.0V] .. 2.35e+03 [sf  -40C 1.08/3.6V]
+  Qh_f     tt/27/nom      226 |      127 [fs  -40C 1.32/3.0V] .. 3.28e+03 [sf  -40C 1.08/3.6V]
+  Ql_r     tt/27/nom   -0.854 |    -1.14 [ff  -40C 1.32/3.0V] ..   -0.596 [ss  -40C 1.08/3.6V]
+  Ql_f     tt/27/nom     29.4 |     18.3 [sf   27C 1.08/3.6V] ..     33.6 [ff  125C 1.32/3.0V]
+  Qin_r    tt/27/nom     30.1 |     26.4 [ss  -40C 1.08/3.6V] ..     34.4 [ff  125C 1.32/3.0V]
+  Qin_f    tt/27/nom    -30.1 |    -34.4 [ff  125C 1.32/3.0V] ..    -20.7 [sf   27C 1.08/3.6V]
+  pk_h_r   tt/27/nom      910 |      522 [ss  125C 1.08/3.6V] .. 1.37e+03 [ff  -40C 1.32/3.0V]
+  pk_h_f   tt/27/nom      463 |      326 [ss  125C 1.20/3.3V] ..      749 [ff  -40C 1.32/3.0V]
+  pk_l_r   tt/27/nom     5.56 |     3.78 [sf   27C 1.08/3.6V] ..     7.24 [fs  -40C 1.32/3.0V]
+  pk_l_f   tt/27/nom      226 |      142 [ss  125C 1.08/3.6V] ..      345 [ff  -40C 1.32/3.0V]
+  pk_in_r  tt/27/nom      301 |      223 [ss  125C 1.08/3.6V] ..      364 [tt  -40C 1.32/3.0V]
+  pk_in_f  tt/27/nom     2.54 |     0.82 [sf   27C 1.08/3.6V] ..     8.45 [fs   27C 1.32/3.0V]
+
+
+--- tb_ls_dn: quiescent current vs simulator gmin (tt, nominal supplies), A delivered
+  T= 27 gmin=1e-12 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  3.52e-14  5.55e-14 | iq_in lo/hi -2.71e-20 -2.01e-16
+  T= 27 gmin=1e-15 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  3.52e-14  5.55e-14 | iq_in lo/hi -2.71e-20 -2.01e-16
+  T= 27 gmin=1e-18 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  3.52e-14  5.55e-14 | iq_in lo/hi -2.71e-20 -2.01e-16
+  T=125 gmin=1e-12 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  1.60e-11  4.18e-12 | iq_in lo/hi -1.36e-20 -1.83e-16
+  T=125 gmin=1e-15 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  1.60e-11  4.18e-12 | iq_in lo/hi -1.36e-20 -1.83e-16
+  T=125 gmin=1e-18 | iq_h lo/hi -0.00e+00 -0.00e+00 | iq_l lo/hi  1.60e-11  4.18e-12 | iq_in lo/hi -1.36e-20 -1.83e-16
+
+--- tb_ls_dn: quiescent current, PVT (A, delivered by the source; | = min .. max over the 45 points, worst case in brackets)
+  VDDH  input lo: tt/27/nom -0.00e+00 | -0.00e+00 [tt  -40C 1.08/3.6V] .. -0.00e+00 [tt  -40C 1.08/3.6V]
+  VDDH  input hi: tt/27/nom -0.00e+00 | -0.00e+00 [tt  -40C 1.08/3.6V] .. -0.00e+00 [tt  -40C 1.08/3.6V]
+  VDDL  input lo: tt/27/nom  3.52e-14 |  1.11e-15 [ss  -40C 1.08/3.6V] ..  7.40e-11 [ff  125C 1.32/3.0V]
+  VDDL  input hi: tt/27/nom  5.55e-14 |  1.15e-15 [ss  -40C 1.08/3.6V] ..  8.49e-12 [ff  125C 1.08/3.6V]
+  input input lo: tt/27/nom -2.71e-20 | -5.42e-20 [sf  -40C 1.32/3.0V] ..  4.07e-20 [ff   27C 1.08/3.6V]
+  input input hi: tt/27/nom -2.01e-16 | -2.98e-16 [ss  125C 1.08/3.6V] ..  5.25e-16 [ss  125C 1.20/3.3V]
+
+--- tb_ls_dn: input transition time TR (tt, 27 C, VDDL 1.2 V, VDDH 3.3 V, CL 20 fF); charge in fC, peak in uA
+   TR     | Qh_r   Qh_f  | Ql_r   Ql_f  | Qin_r  Qin_f | pk_h_r pk_h_f | pk_l_r pk_l_f | pk_in_r pk_in_f
+   2e-11 |     -0     -0 |  -3.97   32.7 |   12.2    -12 |     -0     -0 |   6.61    342 |    725     12
+   5e-11 |     -0     -0 |  -3.98   32.4 |   12.2  -12.1 |     -0     -0 |   5.92    137 |    300  0.336
+   1e-10 |     -0     -0 |  -3.93   31.9 |   12.1    -12 |     -0     -0 |   4.71   68.4 |    152   0.84
+   3e-10 |     -0     -0 |  -3.95   31.2 |   12.1  -12.1 |     -0     -0 |   1.04   27.1 |     53 0.0311
+   1e-09 |     -0     -0 |     -4   30.6 |   12.1  -12.1 |     -0     -0 | 0.0508   17.5 |   15.1 0.0108
+   3e-09 |     -0     -0 |  -4.11   30.3 |   12.1  -12.1 |     -0     -0 | 0.0165   14.9 |    5.4 0.00354
+   1e-08 |     -0     -0 |  -4.31   30.1 |   12.1  -12.1 |     -0     -0 |  0.107   13.8 |   1.88 0.00103
+
+--- tb_ls_dn: load capacitance (tt, 27 C, nominal, TR 100 ps); fC.  Last row: linear fit Q = Q0 + k*CL
+CL= 1e-15 | Qh_r      -0 Qh_f      -0 | Ql_r   -4.01 Ql_f    7.66
+CL= 2e-14 | Qh_r      -0 Qh_f      -0 | Ql_r   -3.93 Ql_f    31.9
+CL= 5e-14 | Qh_r      -0 Qh_f      -0 | Ql_r   -3.93 Ql_f    68.4
+CL= 1e-13 | Qh_r      -0 Qh_f      -0 | Ql_r   -3.93 Ql_f     121
+   fit Ql_r: Q0 = -3.98 fC, k = 0.000594 V
+   fit Ql_f: Q0 = 8.42 fC, k = 1.14 V
+
+--- tb_ls_dn: charge / peak current over PVT, TR 100 ps, CL 20 fF (fC / uA); min .. max [worst corner]
+  Ql_r     tt/27/nom    -3.93 |       -5 [ff  125C 1.08/3.6V] ..    -2.95 [ss  -40C 1.32/3.0V]
+  Ql_f     tt/27/nom     31.9 |     29.6 [ss  -40C 1.08/3.6V] ..     34.2 [ff  125C 1.32/3.0V]
+  Qin_r    tt/27/nom     12.1 |     10.1 [ss  -40C 1.32/3.0V] ..     14.2 [ff  125C 1.08/3.6V]
+  Qin_f    tt/27/nom      -12 |    -14.1 [ff  125C 1.08/3.6V] ..    -10.3 [ss  -40C 1.32/3.0V]
+  pk_l_r   tt/27/nom     4.71 |     3.92 [ff  125C 1.08/3.6V] ..     5.38 [fs  -40C 1.32/3.0V]
+  pk_l_f   tt/27/nom     68.4 |     56.5 [ss  125C 1.32/3.0V] ..     79.9 [ff  -40C 1.08/3.6V]
+  pk_in_r  tt/27/nom      152 |      125 [ss   27C 1.32/3.0V] ..      195 [tt  -40C 1.08/3.6V]
+  pk_in_f  tt/27/nom     0.84 |   0.0481 [ff  -40C 1.08/3.6V] ..      3.3 [fs  -40C 1.32/3.0V]
+
+
