@@ -3,3 +3,4 @@
 Repository for IHP sg13cmos5l level shifter circuits shared in multi-user projects like [Chipalooza](https://opencircuitdesign.com/chipalooza/challenge-2.html)
 
 * [Survey of existing level shifter cells](level_shifter_survey/README.md)
+* [Claude's pick of a level shifter](ls_pair/README.md)  
